@@ -58,6 +58,7 @@ public class GoodController {
                 return "商品已经售完/活动结束/调用超时，欢迎下次光临" + "\t 服务端口 " + serverPort;
             }
         } finally {
+            // 使用Redis事务删除
             while (true) {
                 stringRedisTemplate.watch(REDIS_LOCK);
                 if (Objects.requireNonNull(stringRedisTemplate.opsForValue().get(REDIS_LOCK)).equalsIgnoreCase(value)) {
