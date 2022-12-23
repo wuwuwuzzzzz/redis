@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +57,9 @@ public class GoodController {
                 return "商品已经售完/活动结束/调用超时，欢迎下次光临" + "\t 服务端口 " + serverPort;
             }
         } finally {
-            stringRedisTemplate.delete(REDIS_LOCK);
+            if (Objects.requireNonNull(stringRedisTemplate.opsForValue().get(REDIS_LOCK)).equalsIgnoreCase(value)) {
+                stringRedisTemplate.delete(REDIS_LOCK);
+            }
         }
     }
 }
