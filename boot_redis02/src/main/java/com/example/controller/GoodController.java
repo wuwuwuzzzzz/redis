@@ -1,11 +1,14 @@
 package com.example.controller;
 
+import com.example.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,6 +24,8 @@ public class GoodController {
 
     public static final String REDIS_LOCK = "wxzLock";
 
+    public static final String LUA_NUMBER = "1";
+
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
@@ -34,7 +39,7 @@ public class GoodController {
      * @return java.lang.String
      */
     @GetMapping("/buyGoods")
-    public String buyGoods() {
+    public String buyGoods() throws Exception {
 
         String value = UUID.randomUUID() + Thread.currentThread().getName();
         try {
@@ -58,19 +63,24 @@ public class GoodController {
                 return "商品已经售完/活动结束/调用超时，欢迎下次光临" + "\t 服务端口 " + serverPort;
             }
         } finally {
-            // 使用Redis事务删除
-            while (true) {
-                stringRedisTemplate.watch(REDIS_LOCK);
-                if (Objects.requireNonNull(stringRedisTemplate.opsForValue().get(REDIS_LOCK)).equalsIgnoreCase(value)) {
-                    stringRedisTemplate.multi();
-                    stringRedisTemplate.delete(REDIS_LOCK);
-                    List<Object> list = stringRedisTemplate.exec();
-                    if (list == null) {
-                        continue;
-                    }
+            Jedis jedis = RedisUtils.getJedis();
+            String script = "if redis.call(\"get\",KEYS[1]) == ARGV[1]\n" +
+                    "then\n" +
+                    "    return redis.call(\"del\",KEYS[1])\n" +
+                    "else\n" +
+                    "    return 0\n" +
+                    "end";
+            try {
+                Object o = jedis.eval(script, Collections.singletonList(REDIS_LOCK), Collections.singletonList(value));
+                if (LUA_NUMBER.equals(o.toString())) {
+                    System.out.println("------ del redis lock ok");
+                } else {
+                    System.out.println("------ del redis lock error");
                 }
-                stringRedisTemplate.unwatch();
-                break;
+            } finally {
+                if (null != jedis) {
+                    jedis.close();
+                }
             }
         }
     }
