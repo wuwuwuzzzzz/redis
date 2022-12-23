@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 17:06 2022/12/21
  */
 @SpringBootApplication
-public class Main {
+public class Redis01Main {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(Redis01Main.class, args);
     }
 }
