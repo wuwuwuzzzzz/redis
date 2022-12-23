@@ -37,9 +37,7 @@ public class GoodController {
         String value = UUID.randomUUID() + Thread.currentThread().getName();
         try {
             // setNX
-            Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(REDIS_LOCK, value);
-            // 设置过期时间为10秒钟
-            stringRedisTemplate.expire(REDIS_LOCK, 10L, TimeUnit.SECONDS);
+            Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(REDIS_LOCK, value, 10L, TimeUnit.SECONDS);
 
             if (Boolean.FALSE.equals(flag)) {
                 return "抢锁失败!";
