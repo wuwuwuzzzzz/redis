@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -37,6 +38,8 @@ public class GoodController {
         try {
             // setNX
             Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(REDIS_LOCK, value);
+            // 设置过期时间为10秒钟
+            stringRedisTemplate.expire(REDIS_LOCK, 10L, TimeUnit.SECONDS);
 
             if (Boolean.FALSE.equals(flag)) {
                 return "抢锁失败!";
