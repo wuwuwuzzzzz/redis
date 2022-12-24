@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +40,7 @@ public class GoodController {
      * @return java.lang.String
      */
     @GetMapping("/buyGoods")
-    public String buyGoods() throws Exception {
+    public String buyGoods() {
 
         String value = UUID.randomUUID() + Thread.currentThread().getName();
         RLock redissonLock = redisson.getLock(REDIS_LOCK);
