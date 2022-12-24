@@ -1,5 +1,7 @@
 package com.example.config;
 
+import org.redisson.Redisson;
+import org.redisson.config.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -33,4 +35,16 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    /**
+     *
+     * @author wxz
+     * @date 20:16 2022/12/24
+     * @return org.redisson.Redisson
+     */
+    @Bean
+    public Redisson redisson() {
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://10.211.55.5:6379").setDatabase(0);
+        return (Redisson) Redisson.create(config);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.utils.RedisUtils;
+import org.redisson.Redisson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,9 @@ public class GoodController {
 
     @Value("${server.port}")
     private String serverPort;
+
+    @Resource
+    private Redisson redisson;
 
     /**
      * 

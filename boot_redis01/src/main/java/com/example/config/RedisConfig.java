@@ -36,10 +36,10 @@ public class RedisConfig {
     }
 
     /**
-     * 
+     *
      * @author wxz
      * @date 20:16 2022/12/24 
-     * @return org.redisson.Redisson
+ * @return org.redisson.Redisson
      */
     @Bean
     public Redisson redisson() {
@@ -47,5 +47,4 @@ public class RedisConfig {
         config.useSingleServer().setAddress("redis://10.211.55.5:6379").setDatabase(0);
         return (Redisson) Redisson.create(config);
     }
-
 }
