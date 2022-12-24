@@ -44,13 +44,6 @@ public class GoodController {
         redissonLock.lock();
 
         try {
-            // setNX
-            Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(REDIS_LOCK, value, 10L, TimeUnit.SECONDS);
-
-            if (Boolean.FALSE.equals(flag)) {
-                return "抢锁失败!";
-            }
-
             String s = stringRedisTemplate.opsForValue().get("goods:001");
             int goodNumber = s == null ? 0 : Integer.parseInt(s);
 
