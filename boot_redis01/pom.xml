@@ -48,6 +48,12 @@
             <artifactId>jedis</artifactId>
             <version>4.2.3</version>
         </dependency>
+        <!--    redisson    -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.8.2</version>
+        </dependency>
         <!--    aop    -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
