@@ -54,7 +54,9 @@ public class GoodController {
                 return "商品已经售完/活动结束/调用超时，欢迎下次光临" + "\t 服务端口 " + serverPort;
             }
         } finally {
-            redissonLock.unlock();
+            if (redissonLock.isLocked() && redissonLock.isHeldByCurrentThread()) {
+                redissonLock.unlock();
+            }
         }
     }
 }
