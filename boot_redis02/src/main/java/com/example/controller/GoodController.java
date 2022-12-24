@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.utils.RedisUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -21,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class GoodController {
 
     public static final String REDIS_LOCK = "wxzLock";
-
-    public static final String LUA_NUMBER = "1";
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -42,7 +37,6 @@ public class GoodController {
     @GetMapping("/buyGoods")
     public String buyGoods() {
 
-        String value = UUID.randomUUID() + Thread.currentThread().getName();
         RLock redissonLock = redisson.getLock(REDIS_LOCK);
         redissonLock.lock();
 

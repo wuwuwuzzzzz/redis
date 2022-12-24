@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -39,7 +37,6 @@ public class GoodController {
     @GetMapping("/buyGoods")
     public String buyGoods() {
 
-        String value = UUID.randomUUID() + Thread.currentThread().getName();
         RLock redissonLock = redisson.getLock(REDIS_LOCK);
         redissonLock.lock();
 
